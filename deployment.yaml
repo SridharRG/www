@@ -1,0 +1,13 @@
+---
+- name: Deploy Zola site
+  hosts: all
+  become: yes
+  vars:
+    project_name: "sridhar-blog"
+    www_dir: "/var/www/{{ project_name }}"
+    project_dir: "/tmp/{{ project_name }}"
+  
+  roles:
+    - copy-files
+    - build
+    - deploy

@@ -1,0 +1,6 @@
+---
+- name: Build Zola site
+  command: zola build
+  args:
+    chdir: "{{ project_dir }}"
+  register: build_result

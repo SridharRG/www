@@ -1,0 +1,4 @@
+atlantis.lemnop.me {
+    root * /var/www/sridhar-blog
+    file_server
+}
