@@ -5,12 +5,22 @@
     state: directory
     mode: '0755'
 
-- name: Copy project files to server
+- name: Copy config.toml
   copy:
-    src: "{{ item }}"
-    dest: "{{ project_dir }}/{{ item }}"
-  loop:
-    - config.toml
-    - content
-    - static
-    - templates
+    src: config.toml
+    dest: "{{ project_dir }}/config.toml"
+
+- name: Copy content directory
+  copy:
+    src: content
+    dest: "{{ project_dir }}/"
+
+- name: Copy static directory
+  copy:
+    src: static
+    dest: "{{ project_dir }}/"
+
+- name: Copy templates directory
+  copy:
+    src: templates
+    dest: "{{ project_dir }}/"
