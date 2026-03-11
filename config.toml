@@ -20,7 +20,7 @@ smart_punctuation = true
 
 [markdown.highlighting]
 code = true
-theme = "gruvbox-dark"
+theme = "monokai"
 
 [slugify]
 paths = "on"
