@@ -8,6 +8,7 @@
     project_dir: "/tmp/{{ project_name }}"
   
   roles:
+    - install-zola
     - copy-files
     - build
     - deploy

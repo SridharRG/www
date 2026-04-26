@@ -1,0 +1,6 @@
+---
+zola_version: "0.22.1"
+# GitHub release triple for Linux static builds
+zola_url_arch_map:
+  x86_64: x86_64-unknown-linux-gnu
+  aarch64: aarch64-unknown-linux-gnu
