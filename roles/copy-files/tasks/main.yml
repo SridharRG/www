@@ -1,0 +1,26 @@
+---
+- name: Create temporary project directory
+  file:
+    path: "{{ project_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy config.toml
+  copy:
+    src: config.toml
+    dest: "{{ project_dir }}/config.toml"
+
+- name: Copy content directory
+  copy:
+    src: content
+    dest: "{{ project_dir }}/"
+
+- name: Copy static directory
+  copy:
+    src: static
+    dest: "{{ project_dir }}/"
+
+- name: Copy templates directory
+  copy:
+    src: templates
+    dest: "{{ project_dir }}/"

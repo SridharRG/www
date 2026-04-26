@@ -1,0 +1,52 @@
+---
+- name: Map CPU architecture to Zola release artifact
+  ansible.builtin.set_fact:
+    zola_triple: "{{ zola_url_arch_map[ansible_architecture] | default('') }}"
+
+- name: Fail on unsupported host architecture
+  ansible.builtin.assert:
+    that:
+      - zola_triple | length > 0
+    fail_msg: "No Zola binary mapping for ansible_architecture={{ ansible_architecture }} (supported: {{ zola_url_arch_map.keys() | list }})"
+
+- name: Check installed Zola version
+  ansible.builtin.command: zola --version
+  register: zola_version_cmd
+  changed_when: false
+  failed_when: false
+
+- name: Decide if Zola needs install or upgrade
+  ansible.builtin.set_fact:
+    zola_needs_setup: "{{ zola_version_cmd.rc != 0 or (zola_version not in (zola_version_cmd.stdout | default(''))) }}"
+
+- name: Install or upgrade Zola from GitHub release
+  when: zola_needs_setup
+  block:
+    - name: Download Zola
+      ansible.builtin.get_url:
+        url: "https://github.com/getzola/zola/releases/download/v{{ zola_version }}/zola-v{{ zola_version }}-{{ zola_triple }}.tar.gz"
+        dest: "/tmp/zola-v{{ zola_version }}-{{ zola_triple }}.tar.gz"
+        mode: "0644"
+
+    - name: Unpack Zola binary
+      ansible.builtin.unarchive:
+        src: "/tmp/zola-v{{ zola_version }}-{{ zola_triple }}.tar.gz"
+        dest: "/tmp"
+        remote_src: true
+
+    - name: Place zola in PATH
+      ansible.builtin.copy:
+        src: "/tmp/zola"
+        dest: /usr/local/bin/zola
+        mode: "0755"
+        remote_src: true
+
+    - name: Remove temp unpack
+      ansible.builtin.file:
+        path: /tmp/zola
+        state: absent
+
+    - name: Remove downloaded archive
+      ansible.builtin.file:
+        path: "/tmp/zola-v{{ zola_version }}-{{ zola_triple }}.tar.gz"
+        state: absent
